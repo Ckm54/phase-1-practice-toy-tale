@@ -28,6 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     postData(toyObject)
     loadDom(toyObject)
+
+    addToyForm.reset()
   })
 
   fetch("http://localhost:3000/toys/")
@@ -46,10 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
       const image = document.createElement("img")
       setAttributes(image, {"class": "toy-avatar", "src": `${item.image}`})
       const likes = document.createElement("p")
-      likes.innerText = "4 likes"
+      likes.innerHTML = `<span>${item.likes}</span> likes`
       const btn = document.createElement("button")
       setAttributes(btn, {"class": "like-btn", "id": `${item.id}`})
       btn.innerText = "Like"
+
+      btn.addEventListener("click", () => {
+        item.likes += 1
+        div.querySelector("span").textContent = item.likes
+        updateLikes(item)
+      })
 
       div.append(header, image, likes, btn)
       collectionContainer.appendChild(div)
@@ -65,7 +73,20 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify(data)
     })
     .then(response => response.json())
-    .then(toy => console.log(toy))
+    .then(toy => toy)
+  }
+
+  function updateLikes(toy) {
+    // console.log(toy.id)
+    fetch(`http://localhost:3000/toys/${toy.id}`, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(toy)
+    })
+    .then(response => response.json())
+    .then(data => data)
   }
 
   function setAttributes(el, attrs){
