@@ -23,11 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     let toyObject = {
     "name": nameField.value,
-    "image": urlField.value,
+    // "image": urlField.value,
     "likes": 0
     }
     postData(toyObject)
-    loadDom(toyObject)
 
     addToyForm.reset()
   })
@@ -73,7 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify(data)
     })
     .then(response => response.json())
-    .then(toy => toy)
+    .then(toy => {
+      loadDom(toy)
+      console.log("posting toy, ", toy)
+    })
   }
 
   function updateLikes(toy) {
